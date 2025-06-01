@@ -18,14 +18,17 @@ datasource db {
 model User {
   id Int @default(autoincrement()) @id
   email String @unique
-  Name String
-  password String
+  name String
+  password String?
+  githubId String? @unique
+  avatarUrl String?
+  authProvider String @default("email") // "email" or "github"
   createdAt DateTime @default(now())
 }
 
 model emailOtp {
   id Int @default(autoincrement()) @id
-  email String
+  email String @unique
   otp String
   expiresAt DateTime
   isVerified Boolean

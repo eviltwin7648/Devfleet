@@ -49,8 +49,10 @@ model Agent {
 model Job {
   id         Int      @id @default(autoincrement())
   agent      Agent?   @relation(fields: [agentId], references: [id])
+  title      String
+  description String?
   agentId    Int?
-  command    String
+  script    String
   env        Json?
   status     String   // pending, running, success, failed
   exitCode   Int?

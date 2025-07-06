@@ -236,6 +236,18 @@ const login = async (req: Request, res: Response) => {
   }
 };
 
+const logout = async (req: Request, res: Response) => {
+  try {
+    res.cookie("auth_token", "", {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      expires: new Date(0), // Expire now
+    });
+    res.status(200).json({ message: "Logged out" });
+  } catch (error) {}
+};
+
 const githubAuth = async (req: Request, res: Response) => {
   try {
     if (!clientId || !apiUrl) {
@@ -375,11 +387,53 @@ const githubCallback = async (req: Request, res: Response) => {
   }
 };
 
+const validateAuth = async (req: Request, res: Response): Promise<void> => {
+  try {
+    console.log("COOKIES", req.cookies);
+    const token =
+      req.cookies?.auth_token ||
+      req.headers.authorization?.replace("Bearer ", "");
+    if (!token) {
+      res.status(401).json({ message: "No auth token provided" });
+      return;
+    }
+    let payload: any;
+    try {
+      payload = jwt.verify(token, process.env.JWT_SECRET as string);
+    } catch (err) {
+      res.status(401).json({ message: "Invalid or expired token" });
+      return;
+    }
+    const user = await prisma.user.findUnique({
+      where: { id: payload.userId },
+    });
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+    res.status(200).json({
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        avatarUrl: user.avatarUrl,
+        authProvider: user.authProvider,
+      },
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to validate auth", error: String(error) });
+  }
+};
+
 export const authController = {
   handleSendOtp,
   verifyOtp,
   register,
   login,
+  logout,
   githubAuth,
   githubCallback,
+  validateAuth,
 };

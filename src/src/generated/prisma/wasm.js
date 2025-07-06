@@ -140,9 +140,43 @@ exports.Prisma.EmailOtpScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.AgentScalarFieldEnum = {
+  id: 'id',
+  hostname: 'hostname',
+  os: 'os',
+  arch: 'arch',
+  totalmem: 'totalmem',
+  lastSeen: 'lastSeen',
+  isOnline: 'isOnline'
+};
+
+exports.Prisma.JobScalarFieldEnum = {
+  id: 'id',
+  agentId: 'agentId',
+  command: 'command',
+  env: 'env',
+  status: 'status',
+  exitCode: 'exitCode',
+  createdAt: 'createdAt',
+  finishedAt: 'finishedAt'
+};
+
+exports.Prisma.LogScalarFieldEnum = {
+  id: 'id',
+  jobId: 'jobId',
+  type: 'type',
+  message: 'message',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -155,10 +189,19 @@ exports.Prisma.NullsOrder = {
   last: 'last'
 };
 
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+
 
 exports.Prisma.ModelName = {
   User: 'User',
-  emailOtp: 'emailOtp'
+  emailOtp: 'emailOtp',
+  Agent: 'Agent',
+  Job: 'Job',
+  Log: 'Log'
 };
 
 /**

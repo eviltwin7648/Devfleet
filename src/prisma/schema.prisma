@@ -34,3 +34,36 @@ model emailOtp {
   isVerified Boolean
   createdAt DateTime @default(now())
 }
+
+model Agent {
+  id         Int      @id @default(autoincrement())
+  hostname   String   @unique
+  os         String
+  arch       String
+  totalmem   BigInt
+  lastSeen   DateTime
+  isOnline   Boolean  @default(true)
+  jobs       Job[]
+}
+
+model Job {
+  id         Int      @id @default(autoincrement())
+  agent      Agent?   @relation(fields: [agentId], references: [id])
+  agentId    Int?
+  command    String
+  env        Json?
+  status     String   // pending, running, success, failed
+  exitCode   Int?
+  createdAt  DateTime @default(now())
+  finishedAt DateTime?
+  logs       Log[]
+}
+
+model Log {
+  id        Int      @id @default(autoincrement())
+  job       Job      @relation(fields: [jobId], references: [id])
+  jobId     Int
+  type      String   // stdout, stderr, etc
+  message   String
+  createdAt DateTime @default(now())
+}
